@@ -1,7 +1,8 @@
-import HTTP_STATUS from 'http-status-codes';
+import  HTTP_STATUS  from 'http-status-codes';
 import { Request, Response } from 'express';
 import { config } from '@root/config';
 import JWT from 'jsonwebtoken';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { authService } from '@service/db/auth.service';
 import { BadRequestError } from '@global/helpers/error-handler';
@@ -10,7 +11,7 @@ import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { userService } from '@service/db/user.service';
 
 export class SignIn {
-  public async read(req: Request, res: Response): Promise<void> {
+  public async read(req: Request, res: Response): Promise <void>{
     const { username, password } = req.body;
     const existingUser: IAuthDocument = await authService.getAuthUserByUsername(username);
     if (!existingUser) {
@@ -18,7 +19,7 @@ export class SignIn {
     }
 
     const passwordsMatch: boolean = await existingUser.comparePassword(password);
-    if (!passwordsMatch) {
+    if(!passwordsMatch){
       throw new BadRequestError('Invalid credentials');
     }
 
@@ -26,13 +27,13 @@ export class SignIn {
 
     const userJwt: string = JWT.sign(
       {
-        userId: user._id,
-        uId: existingUser.uId,
-        email: existingUser.email,
-        username: existingUser.username,
-        avatarColor: existingUser.avatarColor
-      },
-      config.JWT_TOKEN!
+      userId: user._id,
+      uId: existingUser.uId,
+      email: existingUser.email,
+      username: existingUser.username,
+      avatarColor: existingUser.avatarColor
+    },
+    config.JWT_TOKEN!
     );
     req.session = { jwt: userJwt };
     const userDocument: IUserDocument = {
@@ -42,8 +43,8 @@ export class SignIn {
       email: existingUser!.email,
       avatarColor: existingUser!.avatarColor,
       uId: existingUser!.uId,
-      createdAt: existingUser!.createdAt
+      createdAt: existingUser!.createdAt,
     } as IUserDocument;
-    res.status(HTTP_STATUS.OK).json({ message: 'User login successfully', user: userDocument, token: userJwt });
-  }
+    res.status( HTTP_STATUS.OK ).json ({ message: 'User login successfully', user:userDocument, token: userJwt});
+}
 }

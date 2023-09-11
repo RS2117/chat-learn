@@ -4,7 +4,7 @@ export interface IErrorResponse {
   message: string;
   statusCode: number;
   status: string;
-  serializeError(): IError;
+  serializeErrors(): IError;
 }
 
 export interface IError {
@@ -57,7 +57,7 @@ export class NotFoundError extends CustomError {
   }
 }
 
-export class NotAutorizedError extends CustomError {
+export class NotAuthorizedError extends CustomError {
   statusCode = HTTP_STATUS.UNAUTHORIZED;
   status = 'error';
 
